@@ -1,37 +1,63 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        int numb = 0;
-        numb = ask(numb);
-        fibb(numb);
-    }
+    public static void main(String[] args) {
+        // Create frame
+        JFrame frame = new JFrame("Fibonacci Sequence with Ratios");
+        frame.setSize(600, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-    public static int ask(int numb) {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Please type x amount of the Fibonacci sequence: ");
-        numb = sc.nextInt();
-        return numb;
-    }
+        // Input panel
+        JPanel inputPanel = new JPanel();
+        JLabel label = new JLabel("Enter amount of Fibonacci numbers: ");
+        JTextField textField = new JTextField(10);
+        JButton button = new JButton("Generate");
+        inputPanel.add(label);
+        inputPanel.add(textField);
+        inputPanel.add(button);
 
-    public static void fibb(int numb) {
-        ArrayList<BigInteger> fib = new ArrayList<>();
-        fib.add(BigInteger.ONE);
-        fib.add(BigInteger.ONE);
-        int i;
-        for (i = 2; i < (numb + 2); i++) {
-            fib.add(fib.get(i - 1).add(fib.get(i - 2)));
-        }
+        // Output area
+        JTextArea outputArea = new JTextArea();
+        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
 
-        System.out.printf("%-10s %-50s %-20s\n", "Index", "Fibonacci", "Ratio");
-        for (i = 0; i < numb; i++) {
-            String ratio = "-";
-            if (i > 0) {
-                ratio = String.format("%.15f", fib.get(i).doubleValue() / fib.get(i - 1).doubleValue());
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Button action
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                outputArea.setText(""); // Clear previous output
+                try {
+                    int numb = Integer.parseInt(textField.getText());
+                    ArrayList<BigInteger> fib = new ArrayList<>();
+                    fib.add(BigInteger.ONE);
+                    fib.add(BigInteger.ONE);
+
+                    for (int i = 2; i < (numb + 2); i++) {
+                        fib.add(fib.get(i - 1).add(fib.get(i - 2)));
+                    }
+
+                    outputArea.append(String.format("%-10s %-50s %-20s\n", "Index", "Fibonacci", "Ratio"));
+                    for (int i = 0; i < numb; i++) {
+                        String ratio = "-";
+                        if (i > 0) {
+                            ratio = String.format("%.15f", fib.get(i).doubleValue() / fib.get(i - 1).doubleValue());
+                        }
+                        outputArea.append(String.format("%-10d %-50s %-20s\n", i + 1, fib.get(i), ratio));
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid number!");
+                }
             }
-            System.out.printf("%-10d %-50s %-20s\n", i + 1, fib.get(i), ratio);
-        }
+        });
+
+        frame.setVisible(true);
     }
 }
