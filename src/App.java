@@ -11,7 +11,7 @@ public class App {
 
     public static int ask(int numb) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("plese type xth fibonacci sequence: ");
+        System.out.print("Please type x amount of the Fibonacci sequence: ");
         numb = sc.nextInt();
         return numb;
     }
@@ -24,11 +24,14 @@ public class App {
         for (i = 2; i < (numb + 2); i++) {
             fib.add(fib.get(i - 1).add(fib.get(i - 2)));
         }
-        
+
+        System.out.printf("%-10s %-50s %-20s\n", "Index", "Fibonacci", "Ratio");
         for (i = 0; i < numb; i++) {
-            System.out.printf("%-5d. %-20s\n", i + 1, fib.get(i));
+            String ratio = "-";
+            if (i > 0) {
+                ratio = String.format("%.15f", fib.get(i).doubleValue() / fib.get(i - 1).doubleValue());
+            }
+            System.out.printf("%-10d %-50s %-20s\n", i + 1, fib.get(i), ratio);
         }
     }
-
-
 }
